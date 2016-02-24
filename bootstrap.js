@@ -148,6 +148,11 @@ var $_support = {transition: false};
 (function () {
     'use strict';
     var rbrace = /(?:\{[\s\S]*\}|\[[\s\S]*\])$/;
+    var isJson = function(str) {
+        try { JSON.parse(str) }
+        catch (e) { return false }
+        return true
+    }
     function formatDataProperty(prop)
     {
         return prop.replace('data-', '').camelCase();
@@ -224,34 +229,41 @@ var $_support = {transition: false};
         });
         [Document, Element].invoke('implement', {
             data: function (property, force) {
-                var data = this.retrieve('dataCollection'), ii = 0, len, hasData = false, attribs;
-                if (!data || force === true)
-                {
+                var data    = this.retrieve('dataCollection'),
+                    ii      = 0,
+                    len,
+                    hasData = false,
+                    attribs;
+
+                if (!data || force === true) {
                     data = {};
                     attribs = this.attributes || [];
-                    for (len = attribs.length; ii < len; ++ii)
-                    {
-                        if (attribs[ii].name.indexOf('data-') === 0)
-                        {
-                            data[formatDataProperty(attribs[ii].name)] = attribs[ii].value.test(rbrace) ? JSON.decode(attribs[ii].value) : attribs[ii].value;
+                    for (len = attribs.length; ii < len; ++ii) {
+                        if (attribs[ii].name.indexOf('data-') === 0) {
+                            data[formatDataProperty(attribs[ii].name)] = attribs[ii].value.test(rbrace)
+                                ? JSON.decode(attribs[ii].value)
+                                : attribs[ii].value;
+
                             hasData = true;
                         }
                     }
+
                     if (!hasData)
                         data = null;
+
                     this.store('dataCollection', data);
                 }
-                else
-                {
+                else {
                     hasData = true;
                 }
+
                 return property ? hasData && data[formatDataProperty(property)] || null : data;
             },
             hasData: function(property, value) {
                 return this.hasAttribute('data-'+property);
             },
             setData: function(property, value) {
-                this.setAttribute('data-'+property, value);
+                this.data(property, value);
             },
             addClasses: function(classNames) {
                 classNames = classNames.split(' ');
@@ -2114,13 +2126,16 @@ var $_support = {transition: false};
 
     var Carousel = function(element, options) {
         this.$element     = $(element)
-        this.indicators   = this.$element.getElements('.carousel-indicators')
-        this.options = Object.merge({}, Carousel.DEFAULTS, options)
+        this.$indicators  = this.$element.getElements('.carousel-indicators')
+        this.options      = Object.merge({}, Carousel.DEFAULTS, options)
         this.paused       = null
         this.sliding      = null
         this.interval     = null
         this.$active      = null
-        this.$items       = null
+        this.$items       = this.$element.getElements('.carousel-inner > .item')
+		this.$items.each(function(el, i) {
+			if ($(el)) el.set('data-index', i)
+		})
 
         this.options.keyboard && this.$element.addNsEvent('keydown.bs.carousel', this.keydown.bind(this))
 
@@ -2162,17 +2177,16 @@ var $_support = {transition: false};
     }
 
     Carousel.prototype.getItemIndex = function (item) {
-        this.$items = item.getParent().getChildren('.item')
-        return this.$items.indexOf(item || this.$active)
+		return $((item && item.length ? item[0] : item) || this.$active).get('data-index')
     }
 
     Carousel.prototype.getItemForDirection = function (direction, active) {
-        var activeIndex = this.itemIndex(active)
+        var activeIndex = this.getItemIndex(active)
         var willWrap = (direction == 'prev' && activeIndex === 0)
                     || (direction == 'next' && activeIndex == (this.$items.length - 1))
         if (willWrap && !this.options.wrap) return active
         var delta = direction == 'prev' ? -1 : 1
-        var itemIndex = (activeIndex + delta) % this.items.length
+        var itemIndex = (activeIndex + delta) % this.$items[0].length
         return this.$items[itemIndex]
     }
 
@@ -2180,7 +2194,7 @@ var $_support = {transition: false};
         var that        = this
         var activeIndex = this.getItemIndex(this.$active = this.$element.getElements('.item.active'))
 
-        if (pos > (this.$items.length - 1) || pos < 0) return
+        if (pos > (this.$items[0].length - 1) || pos < 0) return
 
         if (this.sliding)
             return this.$element.one('slid.bs.carousel', function () { this.to(pos) }.bind(this)) // yes, "slid"
@@ -2231,8 +2245,11 @@ var $_support = {transition: false};
         isCycling && this.pause()
 
         if (this.$indicators.length) {
-            this.$indicators.getElements('.active').removeClass('active')
-            var $nextIndicator = this.$indicators.getChildren()[this.getItemIndex($next)]
+            this.$indicators.getElements('.active').each(function(el) {
+				el.removeClass('active')
+			})
+			var nextIndicatorIndex = this.getItemIndex($next)
+            var $nextIndicator = this.$indicators[0].getChildren()[nextIndicatorIndex]
             $nextIndicator && $nextIndicator.addClass('active')
         }
 
@@ -2244,10 +2261,12 @@ var $_support = {transition: false};
             $next.addClass(direction)
             $active
                 .one('bsTransitionEnd', function () {
+					console.log('bsTransitionEnd')
                     $next.removeClass([type, direction].join(' ')).addClass('active')
-                    $active.removeClass([type, direction].join(' '))
+                    $active.removeClass([type, direction].join(' ')).removeClass('active')
                     this.sliding = false
                     setTimeout(function () {
+						console.log('slid.bs.carousel')
                         this.$element.fireEvent(slidEvent)
                     }.bind(this), 0)
                 }.bind(this))
@@ -2270,11 +2289,11 @@ var $_support = {transition: false};
     function Plugin(option) {
         return function () {
             var $this   = $(this)
-            var data    = $this.data('bs.carousel')
+            var data    = $this.retrieve('bs.carousel')
             var options = Object.merge({}, Carousel.DEFAULTS, $this.data(), typeof option == 'object' && option)
             var action  = typeof option == 'string' ? option : options.slide
 
-            if (!data) $this.data('bs.carousel', (data = new Carousel(this, options)))
+            if (!data) $this.store('bs.carousel', (data = new Carousel(this, options)))
             if (typeof option == 'number') data.to(option)
             else if (action) data[action]()
             else if (options.interval) data.pause().cycle()
@@ -2283,6 +2302,7 @@ var $_support = {transition: false};
 
     Bootstrap.Carousel = Plugin;
     Bootstrap.Carousel.Constructor = Carousel;
+    Element.implement('carousel', Plugin)
 
     // CAROUSEL DATA-API
     // =================
@@ -2290,7 +2310,7 @@ var $_support = {transition: false};
     var clickHandler = function (e) {
         var href
         var $this = $(this)
-        var $target = $this.get('data-target') || (href = $this.get('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
+        var $target = $$($this.get('data-target') || (href = $this.get('href')) && href.replace(/.*(?=#[^\s]+$)/, ''))[0] // strip for ie7
         if (!$target.hasClass('carousel')) return
         var options = Object.merge({}, $target.data(), $this.data())
         var slideIndex = $this.get('data-slide-to')
@@ -2299,7 +2319,7 @@ var $_support = {transition: false};
         Plugin.call($target, options)
 
         if (slideIndex) {
-            $target.data('bs.carousel').to(slideIndex)
+            $target.retrieve('bs.carousel').to(slideIndex)
         }
 
         e.preventDefault()
@@ -2310,8 +2330,8 @@ var $_support = {transition: false};
         .addNsEvent('click.bs.carousel.data-api:relay([data-slide-to])', clickHandler)
 
     window.addEvent('load', function () {
-        $$('[data-ride="carousel"]').each(function () {
-            var $carousel = $(this)
+        $$('[data-ride="carousel"]').each(function (el) {
+            var $carousel = $(el)
             Plugin.call($carousel, $carousel.data())
         })
     })
