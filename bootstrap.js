@@ -3,12 +3,9 @@
  */
 
 if (typeof window.MooTools === 'undefined')
-    throw new Error('CMF.MooStrap requires Mootools');
+    throw new Error('Mootools-Bootstrap requires Mootools');
 
-if (typeof window.CMF === 'undefined')
-    window.CMF = {};
-
-window.CMF.Bootstrap = {};
+window.Bootstrap = {};
 
 var $_support = {transition: false};
 
@@ -332,7 +329,7 @@ var $_support = {transition: false};
 
 
 /* ========================================================================
- * CMF.Bootstrap.Alert
+ * Bootstrap.Alert
  * ======================================================================== */
 (function() {
     'use strict';
@@ -396,8 +393,8 @@ var $_support = {transition: false};
         }.bind(this)()
     }
 
-    CMF.Bootstrap.Alert = Plugin;
-    CMF.Bootstrap.Alert.Constructor = Alert;
+    Bootstrap.Alert = Plugin;
+    Bootstrap.Alert.Constructor = Alert;
 
     // ALERT DATA-API
     // ==============
@@ -407,7 +404,7 @@ var $_support = {transition: false};
 
 
 /* ========================================================================
- * CMF.Bootstrap.Button
+ * Bootstrap.Button
  * ======================================================================== */
 (function () {
     'use strict';
@@ -497,9 +494,9 @@ var $_support = {transition: false};
         }.bind(this)()
     }
 
-    CMF.Bootstrap.Button = Plugin;
-    CMF.Bootstrap.Button.Constructor = Button;
-    Element.prototype.button = CMF.Bootstrap.Button;
+    Bootstrap.Button = Plugin;
+    Bootstrap.Button.Constructor = Button;
+    Element.prototype.button = Bootstrap.Button;
 
     // BUTTON DATA-API
     // ===============
@@ -518,7 +515,7 @@ var $_support = {transition: false};
 
 
 /* ========================================================================
- * CMF.Bootstrap.Collapse
+ * Bootstrap.Collapse
  * ======================================================================== */
 (function () {
     'use strict';
@@ -685,8 +682,8 @@ var $_support = {transition: false};
         }.bind(this)()
     }
 
-    CMF.Bootstrap.Collapse = Plugin;
-    CMF.Bootstrap.Collapse.Constructor = Collapse;
+    Bootstrap.Collapse = Plugin;
+    Bootstrap.Collapse.Constructor = Collapse;
 
 
     // COLLAPSE DATA-API
@@ -710,7 +707,7 @@ var $_support = {transition: false};
 
 
 /* ========================================================================
- * CMF.Bootstrap.Dropdown
+ * Bootstrap.Dropdown
  * ======================================================================== */
 (function () {
     'use strict';
@@ -840,8 +837,8 @@ var $_support = {transition: false};
         }.bind(this)()
     }
 
-    CMF.Bootstrap.Dropdown = Plugin;
-    CMF.Bootstrap.Dropdown.Constructor = Dropdown;
+    Bootstrap.Dropdown = Plugin;
+    Bootstrap.Dropdown.Constructor = Dropdown;
 
     // APPLY TO STANDARD DROPDOWN ELEMENTS
     // ===================================
@@ -857,7 +854,7 @@ var $_support = {transition: false};
 
 
 /* ========================================================================
- * CMF.Bootstrap.Modal
+ * Bootstrap.Modal
  * ======================================================================== */
 
 (function () {
@@ -1134,8 +1131,8 @@ var $_support = {transition: false};
         }.bind(this));
     };
 
-    CMF.Bootstrap.Modal = Plugin;
-    CMF.Bootstrap.Modal.Constructor = Modal;
+    Bootstrap.Modal = Plugin;
+    Bootstrap.Modal.Constructor = Modal;
 
     // MODAL DATA-API
     // ==============
@@ -1161,7 +1158,7 @@ var $_support = {transition: false};
 
 
 /* ========================================================================
- * CMF.Bootstrap.Tooltip
+ * Bootstrap.Tooltip
  * ======================================================================== */
 (function () {
     'use strict';
@@ -1595,15 +1592,15 @@ var $_support = {transition: false};
         }.bind(this)()
     }
 
-    CMF.Bootstrap.Tooltip = Plugin;
-    CMF.Bootstrap.Tooltip.Constructor = Tooltip;
-    Element.prototype.tooltip = CMF.Bootstrap.Tooltip;
+    Bootstrap.Tooltip = Plugin;
+    Bootstrap.Tooltip.Constructor = Tooltip;
+    Element.prototype.tooltip = Bootstrap.Tooltip;
 
 })();
 
 
 /* ========================================================================
- * CMF.Bootstrap.Popover
+ * Bootstrap.Popover
  * ======================================================================== */
 (function () {
     'use strict';
@@ -1615,18 +1612,18 @@ var $_support = {transition: false};
         this.init('popover', element, options);
     };
 
-    if (!CMF.Bootstrap.Tooltip) throw new Error('Popover requires CMF.Bootstrap.Tooltip');
+    if (!Bootstrap.Tooltip) throw new Error('Popover requires Bootstrap.Tooltip');
 
     Popover.VERSION = '3.3.4';
 
-    Popover.DEFAULTS = Object.merge({}, CMF.Bootstrap.Tooltip.DEFAULTS, {
+    Popover.DEFAULTS = Object.merge({}, Bootstrap.Tooltip.DEFAULTS, {
         placement: 'right',
         trigger: 'click',
         content: '',
         template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
     });
 
-    Popover.prototype = Object.merge({}, CMF.Bootstrap.Tooltip.Constructor.prototype);
+    Popover.prototype = Object.merge({}, Bootstrap.Tooltip.Constructor.prototype);
 
     Popover.prototype.constructor = Popover;
 
@@ -1682,14 +1679,14 @@ var $_support = {transition: false};
         }.bind(this)();
     }
 
-    CMF.Bootstrap.Popover = Plugin;
-    CMF.Bootstrap.Popover.Constructor = Popover;
-    Element.prototype.popover = CMF.Bootstrap.Popover;
+    Bootstrap.Popover = Plugin;
+    Bootstrap.Popover.Constructor = Popover;
+    Element.prototype.popover = Bootstrap.Popover;
 })();
 
 
 /* ========================================================================
- * CMF.Bootstrap.Tab
+ * Bootstrap.Tab
  * ======================================================================== */
 (function () {
     'use strict';
@@ -1786,9 +1783,9 @@ var $_support = {transition: false};
         }.bind(this)();
     }
 
-    CMF.Bootstrap.Tab = Plugin;
-    CMF.Bootstrap.Tab.Constructor = Tab;
-    Element.prototype.Tab = CMF.Bootstrap.Tab;
+    Bootstrap.Tab = Plugin;
+    Bootstrap.Tab.Constructor = Tab;
+    Element.prototype.Tab = Bootstrap.Tab;
 
     // TAB DATA-API
     // ============
@@ -1805,7 +1802,7 @@ var $_support = {transition: false};
 
 
 /* ========================================================================
- * CMF.Bootstrap.ScrollSpy
+ * Bootstrap.ScrollSpy
  * ======================================================================== */
 
 (function () {
@@ -1937,8 +1934,8 @@ var $_support = {transition: false};
         }.bind(this)();
     };
 
-    CMF.Bootstrap.ScrollSpy = Plugin;
-    CMF.Bootstrap.ScrollSpy.Constructor = ScrollSpy;
+    Bootstrap.ScrollSpy = Plugin;
+    Bootstrap.ScrollSpy.Constructor = ScrollSpy;
 
     // SCROLLSPY DATA-API
     // ==================
@@ -1953,7 +1950,7 @@ var $_support = {transition: false};
 })();
 
 /* ========================================================================
- * CMF.Bootstrap.Affix
+ * Bootstrap.Affix
  * ======================================================================== */
 (function () {
     'use strict';
@@ -2085,8 +2082,8 @@ var $_support = {transition: false};
         }.bind(this)()
     }
 
-    CMF.Bootstrap.Affix = Plugin;
-    CMF.Bootstrap.Affix.Constructor = Affix;
+    Bootstrap.Affix = Plugin;
+    Bootstrap.Affix.Constructor = Affix;
 
     // AFFIX DATA-API
     // ==============
