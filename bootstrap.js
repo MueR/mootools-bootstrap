@@ -2261,12 +2261,10 @@ var $_support = {transition: false};
             $next.addClass(direction)
             $active
                 .one('bsTransitionEnd', function () {
-					console.log('bsTransitionEnd')
                     $next.removeClass([type, direction].join(' ')).addClass('active')
                     $active.removeClass([type, direction].join(' ')).removeClass('active')
                     this.sliding = false
                     setTimeout(function () {
-						console.log('slid.bs.carousel')
                         this.$element.fireEvent(slidEvent)
                     }.bind(this), 0)
                 }.bind(this))
