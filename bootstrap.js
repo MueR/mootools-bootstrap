@@ -1,5 +1,8 @@
 /**
  * Created by Bas Scholts on 28/05/2015.
+ *
+ * @license MIT
+ * @see https://github.com/MueR/mootools-bootstrap
  */
 
 if (typeof window.MooTools === 'undefined')
