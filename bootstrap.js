@@ -2175,12 +2175,11 @@ var $_support = {transition: false};
         this.interval && clearInterval(this.interval)
 
         this.options.interval
-            && !this.paused
             && (this.interval = setInterval(function() { this.next() }.bind(this), this.options.interval))
     }
 
     Carousel.prototype.getItemIndex = function (item) {
-		return $((item && item.length ? item[0] : item) || this.$active).get('data-index')
+        return parseInt($((item && item.length ? item[0] : item) || this.$active).get('data-index'), 10)
     }
 
     Carousel.prototype.getItemForDirection = function (direction, active) {
@@ -2189,7 +2188,7 @@ var $_support = {transition: false};
                     || (direction == 'next' && activeIndex == (this.$items.length - 1))
         if (willWrap && !this.options.wrap) return active
         var delta = direction == 'prev' ? -1 : 1
-        var itemIndex = (activeIndex + delta) % this.$items[0].length
+        var itemIndex = (activeIndex + delta) % this.$items.length
         return this.$items[itemIndex]
     }
 
